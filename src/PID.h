@@ -8,6 +8,7 @@ public:
    * Run twiddle optimization if true.
    */
   bool do_optimize;
+  bool run_fast;
   
   /*
    * Number of updates in a lap.
@@ -20,6 +21,11 @@ public:
   double lap_err;
   double prev_lap_err;
   double best_lap_err;
+
+  double coeff_throttle;
+  double coeff_angle;
+  double current_speed;
+  double current_angle;
 
   /*
    * Keep track of twiddle process.
@@ -59,12 +65,16 @@ public:
   /*
   * Update the PID error variables given cross track error.
   */
-  void UpdateError(double cte);
+  void UpdateError(double cte, double speed, double angle);
 
   /*
   * Calculate the total PID error.
   */
   double TotalError();
+
+  void RunFast();
+  double Steering();
+  double Throttle();
 
   /*
    * Turn on optimization.
