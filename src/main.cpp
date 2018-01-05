@@ -33,10 +33,17 @@ std::string hasData(std::string s) {
 int main(int argc, char* argv[])
 {
   uWS::Hub h;
+  bool run_fast = true;
 
   PID pid;
   // TODO: Initialize the pid variable.
-  pid.Init(.3, 6., .001);
+  if(run_fast) {
+    pid.Init(.15, 0.0001, 3.); // fast
+    pid.RunFast();
+  }
+  else
+    pid.Init(.2, .001, 1.5);
+
   if(argc > 1 && strcmp(argv[1], "-o") == 0)
     pid.DoOptimize();
 
@@ -55,15 +62,19 @@ int main(int argc, char* argv[])
           double cte = std::stod(j[1]["cte"].get<std::string>());
           double speed = std::stod(j[1]["speed"].get<std::string>());
           double angle = std::stod(j[1]["steering_angle"].get<std::string>());
-          double steer_value;
+          double throttle_value = 0.3;
+          double steer_value = 0.;
           /*
           * TODO: Calcuate steering value here, remember the steering value is
           * [-1, 1].
           * NOTE: Feel free to play around with the throttle and speed. Maybe use
           * another PID controller to control the speed!
           */
-          pid.UpdateError(cte);
-          steer_value = pid.TotalError();
+          pid.UpdateError(cte, speed, angle);
+
+          steer_value = pid.Steering();
+          throttle_value = pid.Throttle();
+
           if(steer_value > 1.)
             steer_value = 1.;
           else if(steer_value < -1.)
@@ -74,7 +85,7 @@ int main(int argc, char* argv[])
 
           json msgJson;
           msgJson["steering_angle"] = steer_value;
-          msgJson["throttle"] = 0.3;
+          msgJson["throttle"] = throttle_value;
           auto msg = "42[\"steer\"," + msgJson.dump() + "]";
           std::cout << msg << std::endl;
           ws.send(msg.data(), msg.length(), uWS::OpCode::TEXT);
