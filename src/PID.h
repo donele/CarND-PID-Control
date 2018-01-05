@@ -8,23 +8,35 @@ public:
    * Run twiddle optimization if true.
    */
   bool do_optimize;
-  bool run_fast;
   
   /*
-   * Number of updates in a lap.
+   * Number of updates per lap.
    */
   int cnt_max;
 
   /*
-   * Sum of squre error.
+   * Sum of squre error during lap.
    */
   double lap_err;
-  double prev_lap_err;
+
+  /*
+   * Sum of squre error from the best lap.
+   */
   double best_lap_err;
 
+  /*
+   * Reduce the throttle at high speed.
+   */
   double coeff_throttle;
-  double coeff_angle;
+
+  /*
+   * Current speed.
+   */
   double current_speed;
+
+  /*
+   * Current angle.
+   */
   double current_angle;
 
   /*
@@ -38,7 +50,7 @@ public:
   * Errors
   */
   std::vector<double> pid_err;
-  double prev_p_error;
+  double prev_p_err;
 
   /*
   * Coefficients
@@ -72,8 +84,14 @@ public:
   */
   double TotalError();
 
-  void RunFast();
+  /*
+  * Get steering value.
+  */
   double Steering();
+
+  /*
+  * Get throttle value.
+  */
   double Throttle();
 
   /*

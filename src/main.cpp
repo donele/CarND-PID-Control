@@ -1,5 +1,7 @@
 #include <uWS/uWS.h>
 #include <iostream>
+#include <string>
+#include <set>
 #include "json.hpp"
 #include "PID.h"
 #include <math.h>
@@ -33,18 +35,15 @@ std::string hasData(std::string s) {
 int main(int argc, char* argv[])
 {
   uWS::Hub h;
-  bool run_fast = true;
 
+  // Initialize PID
+  std::set<std::string> options;
+  for(int i = 1; i < argc; ++i)
+    options.insert(argv[i]);
+  bool do_optimize = options.count("-o");
   PID pid;
-  // TODO: Initialize the pid variable.
-  if(run_fast) {
-    pid.Init(.15, 0.0001, 3.); // fast
-    pid.RunFast();
-  }
-  else
-    pid.Init(.2, .001, 1.5);
-
-  if(argc > 1 && strcmp(argv[1], "-o") == 0)
+  pid.Init(.1, 0.002, 2.);
+  if(do_optimize)
     pid.DoOptimize();
 
   h.onMessage([&pid](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, uWS::OpCode opCode) {
@@ -80,9 +79,6 @@ int main(int argc, char* argv[])
           else if(steer_value < -1.)
             steer_value = -1.;
           
-          // DEBUG
-          //std::cout << "CTE: " << cte << " Steering Value: " << steer_value << std::endl;
-
           json msgJson;
           msgJson["steering_angle"] = steer_value;
           msgJson["throttle"] = throttle_value;
