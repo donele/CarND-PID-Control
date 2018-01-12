@@ -10,7 +10,7 @@ using namespace std;
 
 PID::PID()
   :pid_err({0., 0., 0.}), // P, I, D
-  coeff_throttle(15),
+  coeff_throttle(22),
   n_err(3),
   prev_p_err(0.),
   lap_err(0.),
