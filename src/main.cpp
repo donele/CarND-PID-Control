@@ -42,7 +42,7 @@ int main(int argc, char* argv[])
     options.insert(argv[i]);
   bool do_optimize = options.count("-o");
   PID pid;
-  pid.Init(.1, 0.002, 1.);
+  pid.Init(.1, 0.002, 1.5);
   if(do_optimize)
     pid.DoOptimize();
 
