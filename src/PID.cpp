@@ -26,7 +26,7 @@ void PID::Init(double Kp, double Ki, double Kd) {
   
   // Twiddle parameters.
   for(auto k : K)
-    dK.push_back(.01 * k);
+    dK.emplace_back(.01 * k);
 }
 
 void PID::UpdateError(double cte, double speed, double angle) {
