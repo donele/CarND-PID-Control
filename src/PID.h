@@ -25,11 +25,6 @@ public:
   double best_lap_err;
 
   /*
-   * Reduce the throttle at high speed.
-   */
-  double coeff_throttle;
-
-  /*
    * Current speed.
    */
   double current_speed;
@@ -55,8 +50,8 @@ public:
   /*
   * Coefficients
   */ 
-  std::vector<double> coeff;
-  std::vector<double> dCoeff;
+  std::vector<double> K;
+  std::vector<double> dK;
   int n_err;
 
   /*
